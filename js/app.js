@@ -15,14 +15,12 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        console.log('onDeviceReady');
         app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var channel = 'anjunabeats';
-        console.log('received');
-        getPlaylist(channel);
+        app.getPlaylist(channel);
     },
     
     getPlaylist: function(channel){
@@ -35,7 +33,32 @@ var app = {
                 key: 'AIzaSyAgBjj1jU9DUClk44iX-mJuX_iKSDem2lM'
             },
             function(data){
-                console.log(data);
+                $.each(data.items, function(i, item){
+                    console.log(item);
+                    var playlistId = item.contentDetails.relatedPlaylists.uploads;
+                    app.getVideos(playlistId, 10);
+                });
+            }
+        );
+    },
+    
+    getVideos: function(id, maxResults){
+        $.get(
+            "https://www.googleapis.com/youtube/v3/playlistItems",
+            {
+                part: "snippet",
+                maxResults: maxResults,
+                playlistId: id,
+                key: 'AIzaSyAgBjj1jU9DUClk44iX-mJuX_iKSDem2lM'
+            },
+            function(data){
+                $.each(data.items, function(i, item){
+                    var id = item.snippet.resourceId.videoId;        
+                    var title = item.snippet.title;
+                    var thumb = item.snippet.thumbnails.default.url;
+                    $("#vidlist").append('<li videoId="'+id+'"><img src="'+thumb+'"><h3>'+title+'</h3></li>');
+                    $('#vidlist').listview('refresh');
+                });       
             }
         );
     }
