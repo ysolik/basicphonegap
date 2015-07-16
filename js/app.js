@@ -21,6 +21,10 @@ var app = {
     receivedEvent: function(id) {
         var channel = 'anjunabeats';
         app.getPlaylist(channel);
+        
+        $(document).on('click', '#vidlist li', function(){
+            app.showVideo($(this).attr('videoid'));               
+        });
     },
     
     getPlaylist: function(channel){
@@ -61,5 +65,11 @@ var app = {
                 });       
             }
         );
+    },
+
+    showVideo: function(id){
+        $('#logo').hide();
+        var output = '<iframe width="100%" height="250" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
+        $('#showVideo').html(output);
     }
 };
