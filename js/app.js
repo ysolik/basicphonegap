@@ -19,11 +19,23 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var channel = 'anjunabeats';
+        if(localStorage.channel == null || localStorage.channel == ''){
+            $("#popupDialog").popup('open');
+        }
+        else{
+            var channel = localStorage.getItem('channel');
+        }
+        
         app.getPlaylist(channel);
         
         $(document).on('click', '#vidlist li', function(){
             app.showVideo($(this).attr('videoid'));               
+        });
+        
+        $(document).on('click', '#channelBtnOK', function(){
+            var channel = $('#channelName').val();    
+            app.setChannel(channel);            
+            app.getPlaylist(channel);
         });
     },
     
@@ -71,5 +83,9 @@ var app = {
         $('#logo').hide();
         var output = '<iframe width="100%" height="250" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
         $('#showVideo').html(output);
+    },
+    
+    setChannel: function(channel){
+        localStorage.setItem('channel', channel);
     }
 };
