@@ -37,6 +37,14 @@ var app = {
             app.setChannel(channel);            
             app.getPlaylist(channel);
         });
+        
+        $('#saveOptions').click(function(){
+            app.saveOptions(); 
+        });
+        
+        $('#clearChannel').click(function(){
+            app.clearChannel(); 
+        });
     },
     
     getPlaylist: function(channel){
@@ -52,7 +60,8 @@ var app = {
                 $.each(data.items, function(i, item){
                     console.log(item);
                     var playlistId = item.contentDetails.relatedPlaylists.uploads;
-                    app.getVideos(playlistId, 10);
+                    var maxResults = localStorage.getItem('maxResults') || 10;
+                    app.getVideos(playlistId, maxResults);
                 });
             }
         );
@@ -87,5 +96,22 @@ var app = {
     
     setChannel: function(channel){
         localStorage.setItem('channel', channel);
+    },
+    
+    saveOptions: function(){
+        var channel = $('#channelNameOptions').val();
+        app.setChannel(channel);
+        var maxResults = $('#maxResultsOptions').val();
+        app.setMaxResults(maxResults);
+        $('body').pagecontainer('change', '#main', {options});
+        app.getPlaylist(channel);
+    },
+    
+    clearChannel: function(){
+        
+    },
+    
+    setMaxResults: function(maxResults){
+        localStorage.setItem('maxResults', maxResults);    
     }
 };
