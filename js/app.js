@@ -45,6 +45,13 @@ var app = {
         $('#clearChannel').click(function(){
             app.clearChannel(); 
         });
+        
+        $(document).on('pageinit', '#options', function(e){
+            var channel = localStorage.getItem('channel');
+            var maxResults = localStorage.getItem('maxResults');
+            $('#channelNameOptions').attr('value', channel);
+            $('#maxResultsOptions').attr('value', maxResults);
+        });
     },
     
     getPlaylist: function(channel){
@@ -108,7 +115,10 @@ var app = {
     },
     
     clearChannel: function(){
-        
+        localStorage.removeItem('channel');
+        $('body').pagecontainer('change', '#main', {options});
+        $('#vidlist').html('');
+        $("#popupDialog").popup('open');
     },
     
     setMaxResults: function(maxResults){
